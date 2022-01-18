@@ -86,7 +86,8 @@ public class HexGrid : MonoBehaviour
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
         HexCell cell = _cells[index];
-
+        //var postion = cell.transform.localPosition;
+        //position.y = cell.transform.localPosition.y + 10;
         ship.DOMove(cell.transform.localPosition, 1f);
         cell.color = color;
         _hexMesh.Triangulate(_cells);
