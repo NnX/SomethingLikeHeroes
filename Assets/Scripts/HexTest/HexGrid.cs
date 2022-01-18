@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
@@ -9,14 +10,23 @@ public class HexGrid : MonoBehaviour
     public Color defaultColor = Color.white;
     public Color touchedColor = Color.magenta;
     
-    [SerializeField]  private Transform ship;
+    [SerializeField]  private GameObject skeletonPrefab;
+    [SerializeField]  private List<Transform> unitOrderQueue;
+    [SerializeField]  private List<Transform> leftUnitsList;
+    [SerializeField]  private List<Transform> rightUnitsList;
+    [SerializeField]  private List<int> leftStartCellIndexes;
+    [SerializeField]  private List<int> rightStartCellIndexes;
+    [SerializeField]  private Transform Unit_zombie;
+    [SerializeField]  private Transform Unit_skeleton;
+    [SerializeField]  private Transform Unit_archer;
+    [SerializeField]  private Transform Unit_footman;
     [SerializeField]  private HexCell cellPrefab;
     [SerializeField]  private TextMeshProUGUI cellLabelPrefab;
 
     private Canvas _gridCanvas;
     private HexCell[] _cells;
     private HexMesh _hexMesh;
-
+    private int _activeUnitIndex;
     private void Awake () {
         _gridCanvas = GetComponentInChildren<Canvas>();
         _hexMesh = GetComponentInChildren<HexMesh>();
@@ -27,6 +37,26 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
+
+        InitUnitStartPositions();
+
+        var skeleton = Instantiate(skeletonPrefab, transform.parent);
+        skeleton.transform.DOMove(_cells[145].transform.localPosition, 1f);
+    }
+
+    private void InitUnitStartPositions()
+    {
+
+        for (int i = 0; i < leftUnitsList.Count; i++)
+        {
+            var unit = leftUnitsList[i];
+            unit.DOMove(_cells[leftStartCellIndexes[i]].transform.localPosition, 1f);
+        }
+        for (int i = 0; i < rightUnitsList.Count; i++)
+        {
+            var unit = rightUnitsList[i];
+            unit.DOMove(_cells[rightStartCellIndexes[i]].transform.localPosition, 1f);
+        } 
     }
     
     void Start () {
@@ -88,7 +118,17 @@ public class HexGrid : MonoBehaviour
         HexCell cell = _cells[index];
         //var postion = cell.transform.localPosition;
         //position.y = cell.transform.localPosition.y + 10;
-        ship.DOMove(cell.transform.localPosition, 1f);
+        Debug.Log("[test] COlorCell");
+        // TODO change move order
+        var activeUnit = unitOrderQueue[_activeUnitIndex];
+        activeUnit.DOMove(cell.transform.localPosition, 1f);
+        _activeUnitIndex++;
+
+        if (_activeUnitIndex >= unitOrderQueue.Count)
+        {
+            _activeUnitIndex = 0;
+        }
+        
         cell.color = color;
         _hexMesh.Triangulate(_cells);
     }

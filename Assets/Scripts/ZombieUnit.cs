@@ -9,4 +9,9 @@ public class ZombieUnit : MonoBehaviour
     {
         _unitHealth = unitType.health1;
     }
+
+    private void ReceiveDamage(int damage)
+    {
+        _unitHealth -= damage;
+    }
 }

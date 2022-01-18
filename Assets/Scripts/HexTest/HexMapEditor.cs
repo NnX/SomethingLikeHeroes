@@ -14,8 +14,7 @@ public class HexMapEditor : MonoBehaviour
     }
 
     void Update () {
-        if (Input.GetMouseButton(0)&&
-            !EventSystem.current.IsPointerOverGameObject()) {
+        if (Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject()) {
             HandleInput();
         }
     }
@@ -25,6 +24,7 @@ public class HexMapEditor : MonoBehaviour
         {
             Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(inputRay, out var hit)) {
+                Debug.Log("HandleInput");
                 hexGrid.ColorCell(hit.point, _activeColor);
             }
         }
