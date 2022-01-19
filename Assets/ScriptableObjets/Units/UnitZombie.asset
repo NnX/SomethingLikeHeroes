@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e7fba09bc5ea7849b69d3a9d9bf76c0, type: 3}
   m_Name: UnitZombie
   m_EditorClassIdentifier: 
-  health1: 231
-  attack1: 123
+  health: 0
+  damageMin: 0
+  damageMax: 0
+  speed: 0
+  initiative: 0
+  defaultAttackType: 0
+  unitType: 2

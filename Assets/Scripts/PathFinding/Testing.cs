@@ -3,29 +3,12 @@ using UnityEngine;
 
 public class Testing : MonoBehaviour
 {
-    //[SerializeField] private CharacterPathfindingMovementHandler characterPathfinding;
-    
     private GridSystem<PathNode> _gridSystem;
     private PathFinding _pathFinding;
     private void Start()
     {
-        //_gridSystem = new GridSystem(16,10,1f,new Vector3(-8,-4,0));
-
         _pathFinding = new PathFinding(10, 10);
-
     }
-
-    /*private void Update()
-    { 
-        if (Input.GetMouseButtonDown(0))
-        {
-            _pathFinding.GetGridSystem().SetValue(UtilsGrid.GetMouseWorldPosition(), 12); 
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            Debug.Log(_pathFinding.GetGridSystem().GetValue(UtilsGrid.GetMouseWorldPosition()));
-        }
-    }*/
     
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
@@ -42,7 +25,6 @@ public class Testing : MonoBehaviour
                     Debug.DrawLine(start, end, Color.green, 5f);
                 }
             }
-            //characterPathfinding.SetTargetPosition(mouseWorldPosition);
         }
 
         if (Input.GetMouseButtonDown(1)) {

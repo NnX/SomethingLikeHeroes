@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7fba09bc5ea7849b69d3a9d9bf76c0, type: 3}
-  m_Name: UnitArcher
+  m_Script: {fileID: 11500000, guid: c38e2efa595c5ea4e9ba796bf007eecd, type: 3}
+  m_Name: UndeadHero
   m_EditorClassIdentifier: 
-  health1: 12
-  attack1: 3232
+  heroUnitPrefabs:
+  - {fileID: 1424812474097182842, guid: 724a3c05dede6884ba86bb975e5c5fda, type: 3}
+  - {fileID: 6982730865177753106, guid: d24b75e7791082945924a1750d12c232, type: 3}

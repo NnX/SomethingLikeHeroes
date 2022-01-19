@@ -10,16 +10,14 @@ public class HexGrid : MonoBehaviour
     public Color defaultColor = Color.white;
     public Color touchedColor = Color.magenta;
     
+    [SerializeField]  private GameObject heroLeft;
+    [SerializeField]  private GameObject heroRight;
     [SerializeField]  private GameObject skeletonPrefab;
     [SerializeField]  private List<Transform> unitOrderQueue;
     [SerializeField]  private List<Transform> leftUnitsList;
     [SerializeField]  private List<Transform> rightUnitsList;
     [SerializeField]  private List<int> leftStartCellIndexes;
     [SerializeField]  private List<int> rightStartCellIndexes;
-    [SerializeField]  private Transform Unit_zombie;
-    [SerializeField]  private Transform Unit_skeleton;
-    [SerializeField]  private Transform Unit_archer;
-    [SerializeField]  private Transform Unit_footman;
     [SerializeField]  private HexCell cellPrefab;
     [SerializeField]  private TextMeshProUGUI cellLabelPrefab;
 
@@ -27,26 +25,46 @@ public class HexGrid : MonoBehaviour
     private HexCell[] _cells;
     private HexMesh _hexMesh;
     private int _activeUnitIndex;
+    
     private void Awake () {
-        _gridCanvas = GetComponentInChildren<Canvas>();
-        _hexMesh = GetComponentInChildren<HexMesh>();
-        _cells = new HexCell[height * width];
+        InitHexGrid();
 
-        for (int z = 0, i = 0; z < height; z++) {
-            for (var x = 0; x < width; x++) {
-                CreateCell(x, z, i++);
-            }
-        }
-
+        InitHeroes();
         InitUnitStartPositions();
 
         var skeleton = Instantiate(skeletonPrefab, transform.parent);
         skeleton.transform.DOMove(_cells[145].transform.localPosition, 1f);
     }
 
+    private void InitHexGrid()
+    {
+        _gridCanvas = GetComponentInChildren<Canvas>();
+        _hexMesh = GetComponentInChildren<HexMesh>();
+        _cells = new HexCell[height * width];
+
+        for (int z = 0, i = 0; z < height; z++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                CreateCell(x, z, i++);
+            }
+        }
+    }
+
+    private void InitHeroes()
+    {
+        if (heroLeft.TryGetComponent<Hero>(out var leftHero))
+        {
+            leftHero.Init();
+        }
+        if (heroRight.TryGetComponent<Hero>(out var rightHero))
+        {
+            rightHero.Init();
+        }
+    }
+
     private void InitUnitStartPositions()
     {
-
         for (int i = 0; i < leftUnitsList.Count; i++)
         {
             var unit = leftUnitsList[i];
@@ -65,9 +83,6 @@ public class HexGrid : MonoBehaviour
 
     private void CreateCell (int x, int z, int i) {
         Vector3 position;
-        /*position.x = x * 10f; // without offset
-        position.y = 0f;
-        position.z = z * 10f;*/
         position.x = x * (HexMetrics.innerRadius * 2f);
         position.y = 0f;
         position.z = z * (HexMetrics.outerRadius * 1.5f);
@@ -85,40 +100,12 @@ public class HexGrid : MonoBehaviour
         label.text = cell.coordinates.ToStringOnSeparateLines();
     }
     
-    /*
-    void Update () {
-        if (Input.GetMouseButton(0)) {
-            HandleInput();
-        }
-    }
-
-    void HandleInput () {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(inputRay, out hit)) {
-            TouchCell(hit.point);
-        }
-    }*/
-	
-    /*public void TouchCell (Vector3 position) {
-        position = transform.InverseTransformPoint(position);
-        Debug.Log("touched at " + position);
-        position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-        HexCell cell = _cells[index];
-        cell.color = touchedColor;
-        _hexMesh.Triangulate(_cells);
-    }*/
-    
     public void ColorCell (Vector3 position, Color color) {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
         HexCell cell = _cells[index];
-        //var postion = cell.transform.localPosition;
-        //position.y = cell.transform.localPosition.y + 10;
-        Debug.Log("[test] COlorCell");
+        
         // TODO change move order
         var activeUnit = unitOrderQueue[_activeUnitIndex];
         activeUnit.DOMove(cell.transform.localPosition, 1f);
@@ -129,7 +116,7 @@ public class HexGrid : MonoBehaviour
             _activeUnitIndex = 0;
         }
         
-        cell.color = color;
-        _hexMesh.Triangulate(_cells);
+        /*cell.color = color;
+        _hexMesh.Triangulate(_cells);*/
     }
 }
